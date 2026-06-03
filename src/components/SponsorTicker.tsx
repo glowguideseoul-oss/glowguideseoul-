@@ -5,7 +5,7 @@ const items = [
   "✦ Partner with Seoul Glow Guide",
   "✦ 외국인 환자에게 직접 노출되는 기회",
   "✦ Reach international beauty travelers",
-  "✦ 지금 스폰서십 문의하기 →",
+  "✦ glowguideseoul과 함께할 스폰서(병/의원)을 모십니다.",
   "✦ Featured clinic spots available",
   "✦ 일본 · 영어 · 중국어 사용자 대상",
   "✦ Promote your clinic to global visitors",
