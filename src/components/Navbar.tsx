@@ -6,10 +6,8 @@ import { Menu, X } from "lucide-react";
 import LogoMark from "./LogoMark";
 
 const links = [
-  { label: "Before", href: "#before" },
-  { label: "During", href: "#during" },
-  { label: "After", href: "#after" },
-  { label: "Clinics", href: "#clinics" },
+  { label: "Clinics", href: "/#clinics" },
+  { label: "Events", href: "/events" },
 ];
 
 export default function Navbar() {
