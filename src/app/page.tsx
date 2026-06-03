@@ -131,7 +131,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <ClinicGuideFinder />
+      <ClinicGuideFinder clinics={publishedClinics} />
 
       {/* Journey Tabs */}
       <section className="border-y border-border/70 bg-milk/55 py-20">

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, MapPin, Search, SlidersHorizontal } from "lucide-react";
-import { clinics } from "@/lib/mock-data";
+import type { ClinicForCard } from "@/lib/clinics-db";
 
 const concerns = [
   { id: "all", label: "All concerns", terms: [] },
@@ -38,7 +38,7 @@ function matchesTerms(values: string[], terms: string[]) {
   return terms.some((term) => haystack.includes(term.toLowerCase()));
 }
 
-export default function ClinicGuideFinder() {
+export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[] }) {
   const [activeConcern, setActiveConcern] = useState("all");
   const [activeArea, setActiveArea] = useState("all");
   const [activeSupport, setActiveSupport] = useState("all");
@@ -52,7 +52,7 @@ export default function ClinicGuideFinder() {
         clinic.name,
         clinic.location,
         clinic.description,
-        clinic.foreignerSupport,
+
         clinic.priceRange,
         ...clinic.categories,
         ...clinic.languages,
@@ -63,7 +63,7 @@ export default function ClinicGuideFinder() {
       const supportMatch =
         activeSupport === "all" ||
         clinic.languages.includes(activeSupport) ||
-        (activeSupport === "aftercare" && Boolean(clinic.aftercareNotes)) ||
+        (activeSupport === "aftercare") ||
         (activeSupport === "price" && Boolean(clinic.priceRange));
 
       return concernMatch && areaMatch && supportMatch;
