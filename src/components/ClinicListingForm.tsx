@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { CheckCircle } from "lucide-react";
-import { getSupabase } from "@/lib/supabase";
 
 const languages = [
   { kr: "영어", en: "English" },
@@ -12,7 +11,25 @@ const languages = [
   { kr: "아랍어", en: "Arabic" },
 ];
 
+type InquiryType = "listing" | "sponsor";
+
+const tabs: { id: InquiryType; kr: string; en: string; desc: string }[] = [
+  {
+    id: "listing",
+    kr: "클리닉 등록 문의",
+    en: "Clinic listing",
+    desc: "디렉토리에 클리닉 정보를 등록하고 외국인 환자에게 노출되세요.",
+  },
+  {
+    id: "sponsor",
+    kr: "스폰서 제안",
+    en: "Sponsorship",
+    desc: "배너·이벤트·피처드 슬롯 등 유료 노출 파트너십을 문의하세요.",
+  },
+];
+
 export default function ClinicListingForm() {
+  const [inquiryType, setInquiryType] = useState<InquiryType>("listing");
   const [clinicName, setClinicName] = useState("");
   const [contactPerson, setContactPerson] = useState("");
   const [email, setEmail] = useState("");
@@ -31,14 +48,18 @@ export default function ClinicListingForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
-    await getSupabase().from("clinic_listing_inquiries").insert({
-      clinic_name: clinicName,
-      contact_person: contactPerson || null,
-      email,
-      location_label: location || null,
-      supported_languages: selectedLangs.join(", ") || null,
-      monthly_budget_range: null,
-      message: message || null,
+    await fetch("/api/clinic-listing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        clinic_name: clinicName,
+        contact_person: contactPerson || null,
+        email,
+        location_label: location || null,
+        supported_languages: selectedLangs.join(", ") || null,
+        monthly_budget_range: inquiryType,
+        message: message || null,
+      }),
     });
     setSubmitting(false);
     setSubmitted(true);
@@ -59,8 +80,30 @@ export default function ClinicListingForm() {
     );
   }
 
+  const activeTab = tabs.find((t) => t.id === inquiryType)!;
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Type toggle */}
+      <div className="grid grid-cols-2 gap-2 p-1 bg-warm border border-border rounded-2xl">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setInquiryType(tab.id)}
+            className={`rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+              inquiryType === tab.id
+                ? "bg-white shadow-sm text-ink border border-border"
+                : "text-muted hover:text-ink"
+            }`}
+          >
+            <span className="block">{tab.kr}</span>
+            <span className="block text-[11px] font-normal mt-0.5 opacity-70">{tab.en}</span>
+          </button>
+        ))}
+      </div>
+      <p className="text-xs text-muted leading-relaxed -mt-1">{activeTab.desc}</p>
+
       {[
         { label: "병원명", labelEn: "Clinic name", value: clinicName, onChange: setClinicName, required: true, placeholder: "강남 스킨 스튜디오 / Seoul Skin Studio" },
         { label: "담당자 이름", labelEn: "Contact person", value: contactPerson, onChange: setContactPerson, required: false, placeholder: "홍길동 / Your name" },
@@ -77,7 +120,7 @@ export default function ClinicListingForm() {
             value={field.value}
             onChange={(e) => field.onChange(e.target.value)}
             placeholder={field.placeholder}
-            className="w-full border border-border rounded-2xl px-5 py-3.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral bg-warm"
+            className="w-full border border-border rounded-2xl px-5 py-3.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 bg-warm"
           />
         </div>
       ))}
@@ -112,8 +155,12 @@ export default function ClinicListingForm() {
           rows={3}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="병원 소개나 궁금한 점을 자유롭게 적어주세요. / Tell us about your clinic and what you're looking for."
-          className="w-full border border-border rounded-2xl px-5 py-3.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral bg-warm resize-none"
+          placeholder={
+            inquiryType === "sponsor"
+              ? "관심 있는 광고 형태나 예산 범위를 알려주세요. / Tell us about your sponsorship interest and budget."
+              : "병원 소개나 궁금한 점을 자유롭게 적어주세요. / Tell us about your clinic and what you're looking for."
+          }
+          className="w-full border border-border rounded-2xl px-5 py-3.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 bg-warm resize-none"
         />
       </div>
 

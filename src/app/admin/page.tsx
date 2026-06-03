@@ -127,7 +127,14 @@ export default async function AdminPage() {
               {inquiries.map((row) => (
                 <div key={row.id} className="bg-white rounded-2xl border border-gray-200 p-5">
                   <div className="flex items-start justify-between gap-4 mb-3">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className={`text-xs font-semibold rounded-full px-2.5 py-1 ${
+                        row.monthly_budget_range === "sponsor"
+                          ? "bg-purple-100 text-purple-700"
+                          : "bg-coral-light text-coral-dark"
+                      }`}>
+                        {row.monthly_budget_range === "sponsor" ? "스폰서 제안" : "클리닉 등록"}
+                      </span>
                       <span className="text-sm font-semibold text-gray-900">{row.clinic_name}</span>
                       {row.status === "new" && (
                         <span className="text-xs font-semibold rounded-full px-2.5 py-1 bg-yellow-100 text-yellow-700">
@@ -145,7 +152,9 @@ export default async function AdminPage() {
                     {row.email && <Field label="이메일" value={row.email} />}
                     {row.location_label && <Field label="위치" value={row.location_label} />}
                     {row.supported_languages && <Field label="지원 언어" value={row.supported_languages} />}
-                    {row.monthly_budget_range && <Field label="예산" value={row.monthly_budget_range} />}
+                    {row.monthly_budget_range && !["listing","sponsor"].includes(row.monthly_budget_range) && (
+                      <Field label="예산" value={row.monthly_budget_range} />
+                    )}
                   </div>
 
                   {row.message && (

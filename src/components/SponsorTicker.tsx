@@ -16,7 +16,7 @@ const repeated = [...items, ...items];
 export default function SponsorTicker() {
   return (
     <a
-      href="mailto:glowguide.seoul@gmail.com?subject=Sponsorship%20Inquiry%20%7C%20Seoul%20Glow%20Guide&body=안녕하세요%2C%0A%0ASeoul%20Glow%20Guide%20스폰서십%20관련하여%20문의드립니다.%0A%0A병원명%3A%20%0A담당자%3A%20%0A문의사항%3A%20"
+      href="/for-clinics#advertise"
       className="block w-full overflow-hidden bg-ink border-y border-ink/10 py-2.5 select-none cursor-pointer hover:bg-ink/90 transition-colors group"
     >
       <div className="flex animate-ticker whitespace-nowrap">
