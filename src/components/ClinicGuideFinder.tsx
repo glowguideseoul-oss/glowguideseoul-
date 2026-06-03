@@ -101,7 +101,7 @@ export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[
               <div className="inline-flex items-center gap-2 text-sm font-semibold text-ink">
                 <Search size={16} className="text-jade-dark" />
                 {filteredClinics.length > 0
-                  ? `${filteredClinics.length} matching guides`
+                  ? `${visibleClinics.length} of ${filteredClinics.length} matching guides`
                   : "No exact match yet"}
               </div>
               <span className="self-start rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-muted">

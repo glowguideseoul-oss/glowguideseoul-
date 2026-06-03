@@ -53,7 +53,8 @@ export async function getPublishedClinics(): Promise<ClinicForCard[]> {
     .eq("profile_status", "published")
     .in("review_status", ["directory_approved", "clinic_confirmed"])
     .order("sponsored_status", { ascending: false })
-    .order("user_ratings_total", { ascending: false });
+    .order("user_ratings_total", { ascending: false })
+    .limit(100);
 
   if (error || !data) return [];
 
