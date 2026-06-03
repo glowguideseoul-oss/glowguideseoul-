@@ -165,6 +165,24 @@ def collect_candidates(api_key: str) -> dict[str, dict[str, Any]]:
     return candidates
 
 
+NON_MEDICAL_TYPES = {
+    "department_store", "shopping_mall", "store", "restaurant", "food",
+    "lodging", "hotel", "gym", "pharmacy", "drugstore",
+    "tourist_attraction", "amusement_park", "stadium", "university",
+}
+
+def is_medical(name: str, types: list[str]) -> bool:
+    name_lower = name.lower()
+    bad_words = ["department store", "pharmacy", "drugstore", "hotel", "spa ", " spa",
+                 "massage", "sauna", "gym ", "fitness", "leaguer", "research center",
+                 "graduate school", "university hospital"]
+    if any(w in name_lower for w in bad_words):
+        return False
+    types_set = set(types)
+    if types_set & NON_MEDICAL_TYPES and not types_set & {"health", "doctor", "hospital", "dentist", "physiotherapist", "beauty_salon"}:
+        return False
+    return True
+
 def detect_clinic_type(name: str, types: list[str]) -> str:
     name_lower = name.lower()
     types_str = " ".join(types).lower()
@@ -265,6 +283,9 @@ def main() -> None:
 
         d = details_resp["result"]
         name = d.get("name", "")
+        if not is_medical(name, d.get("types", [])):
+            print(f"    Skipping non-medical: {name}")
+            continue
         clinic_type = detect_clinic_type(name, d.get("types", []))
         address_components = d.get("address_components", [])
         district = extract_district(address_components)
