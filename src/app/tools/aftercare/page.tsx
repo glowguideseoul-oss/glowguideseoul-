@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Aftercare Checklist",
+  description: "Post-treatment aftercare guide for Seoul clinic visits — what to do, avoid, and watch for.",
+  openGraph: { url: "https://glowguideseoul.com/tools/aftercare" },
+};
+
 import Navbar from "@/components/Navbar";
 import { aftercareChecklists } from "@/lib/mock-data";
 import { CheckCircle2, Circle, Phone } from "lucide-react";

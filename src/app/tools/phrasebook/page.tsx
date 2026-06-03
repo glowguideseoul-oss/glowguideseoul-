@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Clinic Phrasebook",
+  description: "Korean phrases for your clinic visit — greetings, questions to ask, and aftercare communication, translated for Seoul clinics.",
+  openGraph: { url: "https://glowguideseoul.com/tools/phrasebook" },
+};
+
 import Navbar from "@/components/Navbar";
 import { phrasebook } from "@/lib/mock-data";
 import { Volume2 } from "lucide-react";

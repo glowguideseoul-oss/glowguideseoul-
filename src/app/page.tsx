@@ -1,4 +1,27 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+
+export const metadata: Metadata = {
+  title: "Seoul Glow Guide — K-beauty Clinic Trips, Guided",
+  description:
+    "Plan your Seoul clinic visit with confidence. Find foreigner-ready clinics, get pre-visit advice, and prepare for every step — from consultation to aftercare.",
+  openGraph: {
+    url: "https://glowguideseoul.com",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Seoul Glow Guide",
+  url: "https://glowguideseoul.com",
+  description: "K-beauty clinic trip guide for medical travelers visiting Seoul.",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://glowguideseoul.com/#clinics",
+    "query-input": "required name=search_term_string",
+  },
+};
 import ClinicCard from "@/components/ClinicCard";
 import ClinicGuideFinder from "@/components/ClinicGuideFinder";
 import JourneyTabs from "@/components/JourneyTabs";
@@ -11,6 +34,10 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="min-h-screen bg-transparent font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
 
       {/* Hero */}

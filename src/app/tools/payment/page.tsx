@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Payment Checklist",
+  description: "What to prepare for clinic payment in Seoul — cards, cash, insurance, and tipping guide.",
+  openGraph: { url: "https://glowguideseoul.com/tools/payment" },
+};
+
 import Navbar from "@/components/Navbar";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 

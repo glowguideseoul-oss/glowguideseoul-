@@ -1,7 +1,20 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import LogoMark from "@/components/LogoMark";
 import ClinicListingForm from "@/components/ClinicListingForm";
 import { ArrowRight } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "For Clinic Operators",
+  description:
+    "List your Seoul clinic on Seoul Glow Guide and reach international medical travelers planning K-beauty clinic visits in Korea.",
+  openGraph: {
+    title: "Partner with Seoul Glow Guide — Reach International Patients",
+    description:
+      "Showcase your clinic to medical travelers planning visits to Seoul. Foreigner-ready clinic guides, language support, and aftercare information.",
+    url: "https://glowguideseoul.com/for-clinics",
+  },
+};
 
 export default function ForClinics() {
   return (

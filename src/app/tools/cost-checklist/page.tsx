@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Cost Checklist",
+  description: "Understand the full cost of your Seoul clinic visit — consultation fees, treatment, medication, and extras.",
+  openGraph: { url: "https://glowguideseoul.com/tools/cost-checklist" },
+};
+
 import Navbar from "@/components/Navbar";
 import { Info } from "lucide-react";
 

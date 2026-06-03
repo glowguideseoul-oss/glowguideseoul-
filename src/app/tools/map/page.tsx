@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Clinic Trip Map",
+  description: "Navigate your Seoul clinic visit step by step — from hotel to clinic, pharmacy, and back.",
+  openGraph: { url: "https://glowguideseoul.com/tools/map" },
+};
+
 import Navbar from "@/components/Navbar";
 import { clinics } from "@/lib/mock-data";
 import Link from "next/link";

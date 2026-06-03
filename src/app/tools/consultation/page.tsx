@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Consultation Questions",
+  description: "Questions to ask your Seoul clinic during consultation — in English and Korean.",
+  openGraph: { url: "https://glowguideseoul.com/tools/consultation" },
+};
+
 import Navbar from "@/components/Navbar";
 
 const questions = [

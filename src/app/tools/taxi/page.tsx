@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Taxi Address Card",
+  description: "Korean address cards for your Seoul clinic visit. Show your driver the destination in Korean — no language barrier.",
+  openGraph: { url: "https://glowguideseoul.com/tools/taxi" },
+};
+
 import Navbar from "@/components/Navbar";
 import { taxiCards } from "@/lib/mock-data";
 import { MapPin, Copy } from "lucide-react";
