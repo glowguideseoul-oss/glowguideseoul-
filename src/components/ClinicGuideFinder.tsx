@@ -23,14 +23,6 @@ const areas = [
   { id: "myeongdong", label: "Myeongdong", terms: ["myeongdong", "명동"] },
 ];
 
-const supportOptions = [
-  { id: "all", label: "Any support" },
-  { id: "EN", label: "English" },
-  { id: "JP", label: "Japanese" },
-  { id: "ZH", label: "Chinese" },
-  { id: "aftercare", label: "Aftercare" },
-  { id: "price", label: "Price guide" },
-];
 
 function matchesTerms(values: string[], terms: string[]) {
   if (!terms.length) return true;
@@ -41,13 +33,12 @@ function matchesTerms(values: string[], terms: string[]) {
 export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[] }) {
   const [activeConcern, setActiveConcern] = useState("all");
   const [activeArea, setActiveArea] = useState("all");
-  const [activeSupport, setActiveSupport] = useState("all");
   const [visibleCount, setVisibleCount] = useState(5);
 
   const concern = concerns.find((item) => item.id === activeConcern) ?? concerns[0];
   const area = areas.find((item) => item.id === activeArea) ?? areas[0];
 
-  useEffect(() => { setVisibleCount(5); }, [activeConcern, activeArea, activeSupport]);
+  useEffect(() => { setVisibleCount(5); }, [activeConcern, activeArea]);
 
   const filteredClinics = useMemo(() => {
     return clinics.filter((clinic) => {
@@ -63,15 +54,9 @@ export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[
 
       const concernMatch = matchesTerms(searchable, concern.terms);
       const areaMatch = matchesTerms(searchable, area.terms);
-      const supportMatch =
-        activeSupport === "all" ||
-        clinic.languages.includes(activeSupport) ||
-        (activeSupport === "aftercare") ||
-        (activeSupport === "price" && Boolean(clinic.priceRange));
-
-      return concernMatch && areaMatch && supportMatch;
+      return concernMatch && areaMatch;
     });
-  }, [activeConcern, activeArea, activeSupport, concern.terms, area.terms]);
+  }, [activeConcern, activeArea, concern.terms, area.terms]);
 
   const allVisible = filteredClinics.length > 0 ? filteredClinics : clinics.slice(0, 12);
   const visibleClinics = allVisible.slice(0, visibleCount);
@@ -108,13 +93,6 @@ export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[
               items={areas}
               activeId={activeArea}
               onSelect={setActiveArea}
-            />
-            <FilterGroup
-              title="Support"
-              items={supportOptions}
-              activeId={activeSupport}
-              onSelect={setActiveSupport}
-              compact
             />
           </div>
 
