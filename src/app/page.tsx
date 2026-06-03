@@ -1,65 +1,196 @@
-import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import ClinicCard from "@/components/ClinicCard";
+import ClinicGuideFinder from "@/components/ClinicGuideFinder";
+import JourneyTabs from "@/components/JourneyTabs";
+import HeroButtons from "@/components/HeroButtons";
+import LogoMark from "@/components/LogoMark";
+import { clinics } from "@/lib/mock-data";
+import { CalendarDays, Languages, ClipboardList, ShieldCheck, MapPin, Plane, Pill, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen bg-transparent font-sans">
+      <Navbar />
+
+      {/* Hero */}
+      <section className="max-w-6xl mx-auto px-4 pt-14 pb-20">
+        <div className="glass-panel relative overflow-hidden rounded-[36px] p-6 md:p-10">
+          <div className="grid items-center gap-10 lg:grid-cols-[1fr_390px]">
+            <div className="py-8 md:py-12">
+              <div className="inline-flex items-center gap-2 bg-jade-light text-jade-dark rounded-full px-4 py-1.5 text-sm font-semibold mb-8">
+                <LogoMark className="h-4 w-4" />
+                K-beauty clinic trip guide for medical travelers
+              </div>
+
+              <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl text-ink leading-[0.98] mb-6 max-w-3xl">
+                Your Seoul glow trip, guided from clinic visit to aftercare
+              </h1>
+
+              <p className="text-soft text-lg max-w-xl mb-10 leading-relaxed">
+                Prepare your appointment, navigate your clinic visit, and keep aftercare clear
+                from hotel to follow-up.
+              </p>
+
+              <HeroButtons />
+            </div>
+
+            <div className="rounded-[30px] border border-border/80 bg-white/50 p-2 shadow-2xl sm:rounded-[38px] sm:p-3">
+              <div className="rounded-[30px] border border-border bg-milk/90 p-5">
+                <div className="flex items-center justify-between text-xs font-semibold text-muted">
+                  <span className="inline-flex items-center gap-1.5">
+                    <LogoMark className="h-4 w-4 text-jade-dark" />
+                    Seoul Glow
+                  </span>
+                  <span>Seoul · Today</span>
+                </div>
+                <div className="my-5 rounded-[26px] border border-border bg-[linear-gradient(90deg,rgba(234,216,198,.55)_1px,transparent_1px),linear-gradient(rgba(234,216,198,.55)_1px,transparent_1px)] bg-[length:34px_34px] p-5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-coral-light px-3 py-1 text-xs font-semibold text-coral-dark">
+                    <MapPin size={13} />
+                    Clinic Trip
+                  </span>
+                  <div className="my-6 flex items-center gap-3">
+                    <span className="h-0.5 flex-1 rounded-full bg-jade/30" />
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-jade text-white shadow-lg">
+                      <MapPin size={20} />
+                    </span>
+                    <span className="h-0.5 flex-1 rounded-full bg-jade/30" />
+                  </div>
+                  <p className="mb-0 text-sm font-medium text-soft">Hotel → Clinic → Pharmacy → Aftercare</p>
+                </div>
+                <div className="rounded-[24px] border border-border bg-white/70 p-4">
+                  <div className="mb-4 flex items-center gap-2">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-jade-light text-jade-dark">
+                      <CalendarDays size={16} />
+                    </div>
+                    <span className="text-sm font-semibold text-ink">Today in Seoul</span>
+                  </div>
+                  {[
+                    { time: "09:30", label: "Leave hotel", icon: <Plane size={14} />, done: true },
+                    { time: "10:15", label: "Clinic consultation", icon: <MapPin size={14} />, highlight: true },
+                    { time: "13:00", label: "Pick up medication", icon: <Pill size={14} /> },
+                  ].map((item) => (
+                    <div key={item.time} className="grid grid-cols-[48px_22px_1fr] items-center gap-2 border-b border-border py-2.5 last:border-0">
+                      <span className="text-xs font-semibold text-muted">{item.time}</span>
+                      <span className={item.highlight ? "text-coral" : "text-jade-dark"}>{item.icon}</span>
+                      <span className={`text-sm ${item.done ? "text-muted line-through" : item.highlight ? "font-semibold text-coral-dark" : "text-ink"}`}>
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <ClinicGuideFinder />
+
+      {/* Journey Tabs */}
+      <section className="border-y border-border/70 bg-milk/55 py-20">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="font-serif text-4xl text-ink mb-3">Plan every step</h2>
+            <p className="text-muted">From your first search to full recovery.</p>
+          </div>
+          <JourneyTabs />
+        </div>
+      </section>
+
+      {/* Why it matters */}
+      <section className="max-w-5xl mx-auto px-4 py-20">
+        <div className="text-center mb-12">
+          <h2 className="font-serif text-4xl text-ink mb-3">Why travelers use it</h2>
+          <p className="text-muted">Navigating Korean clinics as a foreigner can be overwhelming.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { icon: <Languages size={22} className="text-jade-dark" />, title: "Language barrier", desc: "Consent forms, staff, aftercare guides — all in Korean." },
+            { icon: <ClipboardList size={22} className="text-jade-dark" />, title: "No checklist", desc: "Patients arrive unprepared, extending consultations." },
+            { icon: <ShieldCheck size={22} className="text-jade-dark" />, title: "Trust gap", desc: "Hard to verify clinic quality without reading Korean reviews." },
+            { icon: <CalendarDays size={22} className="text-jade-dark" />, title: "Post-care falloff", desc: "Follow-up channels disappear once you leave Korea." },
+          ].map((item) => (
+            <div key={item.title} className="soft-card rounded-[28px] p-6">
+              <div className="w-11 h-11 bg-jade-light rounded-2xl flex items-center justify-center mb-4">
+                {item.icon}
+              </div>
+              <h3 className="font-semibold text-ink text-sm mb-2">{item.title}</h3>
+              <p className="text-muted text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Clinic guides */}
+      <section id="clinics" className="bg-milk/60 border-y border-border/70 py-20">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <h2 className="font-serif text-4xl text-ink mb-2">Clinic guides</h2>
+              <p className="text-muted text-sm">Sponsored clinics with foreigner-ready information.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {clinics.map((clinic) => (
+              <ClinicCard key={clinic.id} clinic={clinic} />
+            ))}
+
+            {/* Adding soon card */}
+            <div className="soft-card rounded-[28px] border-dashed p-6 flex flex-col items-center justify-center text-center min-h-[280px] gap-3">
+              <div className="w-10 h-10 rounded-full bg-border flex items-center justify-center text-muted text-lg">
+                +
+              </div>
+              <p className="font-medium text-ink text-sm">More clinics being added</p>
+              <p className="text-xs text-muted leading-relaxed max-w-[180px]">
+                We&apos;re onboarding foreigner-ready clinics in Seoul. Check back soon.
+              </p>
+              <Link
+                href="/for-clinics"
+                className="mt-2 text-xs text-coral font-medium hover:underline"
+              >
+                Is your clinic interested? →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* For Clinics CTA */}
+      <section className="max-w-5xl mx-auto px-4 py-20">
+        <div className="rounded-[34px] bg-ink p-10 md:p-14 text-center shadow-2xl">
+          <div className="inline-flex items-center gap-2 bg-white/10 text-white rounded-full px-4 py-1.5 text-sm mb-6">
+            For clinic operators
+          </div>
+          <h2 className="font-serif text-4xl text-white mb-4 max-w-lg mx-auto">
+            Reach international patients planning clinic visits in Korea
+          </h2>
+          <p className="text-white/60 mb-8 max-w-md mx-auto leading-relaxed">
+            Showcase your clinic information, supported languages, and aftercare support to medical travelers.
+          </p>
+          <Link
+            href="/for-clinics"
+            className="inline-flex items-center gap-2 bg-jade text-white rounded-full px-7 py-3.5 font-semibold hover:bg-jade-dark transition-colors"
+          >
+            Request clinic listing
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-border py-8">
+        <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <span className="inline-flex items-center gap-2 font-serif text-ink">
+            <LogoMark className="h-5 w-5 text-jade-dark" />
+            Seoul Glow Guide
+          </span>
+          <p className="text-muted text-xs text-center max-w-md">
+            Seoul Glow Guide provides travel and appointment preparation support only.
+            It does not provide medical advice, diagnosis, or treatment recommendations.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
   );
 }

@@ -1,26 +1,98 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Colors */
+  --color-warm: #FFFAF5;
+  --color-porcelain: #F7F1EA;
+  --color-milk: #FFFDF9;
+  --color-white: #FFFFFF;
+  --color-ink: #24211F;
+  --color-muted: #8D837C;
+  --color-soft: #5F5954;
+  --color-border: #EADFD8;
+
+  --color-coral: #D88479;
+  --color-coral-light: #FAE7E1;
+  --color-coral-dark: #A95A4F;
+  --color-jade: #5B9B8F;
+  --color-jade-light: #E9F3EF;
+  --color-jade-dark: #2F6F66;
+  --color-clay: #B99376;
+  --color-sand: #EAD8C6;
+
+  --color-success: #4CAF82;
+  --color-warning: #F0A050;
+  --color-info: #6BAED6;
+
+  /* Fonts */
+  --font-serif: var(--font-dm-serif), serif;
+  --font-sans: var(--font-jakarta), sans-serif;
+
+  /* Border radius */
+  --radius-card: 28px;
+  --radius-card-inner: 20px;
+  --radius-sheet: 32px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background-color: #FFFAF5;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at 16% 6%, rgba(216, 132, 121, 0.14), transparent 28%),
+    radial-gradient(circle at 86% 0%, rgba(91, 155, 143, 0.14), transparent 26%),
+    linear-gradient(180deg, #FFFDF9 0%, #FFFAF5 42%, #F7F1EA 100%);
+  color: #24211F;
+  font-family: var(--font-jakarta), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.glass-panel {
+  background: rgba(255, 253, 249, 0.74);
+  border: 1px solid rgba(104, 91, 82, 0.16);
+  box-shadow: 0 24px 70px rgba(54, 43, 34, 0.12);
+  backdrop-filter: blur(22px);
+}
+
+.soft-card {
+  background: rgba(255, 255, 255, 0.64);
+  border: 1px solid rgba(104, 91, 82, 0.14);
+  box-shadow: 0 14px 34px rgba(54, 43, 34, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.clinic-visual {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0)),
+    radial-gradient(circle at 76% 18%, rgba(255, 255, 255, 0.55), transparent 22%),
+    linear-gradient(135deg, #CFE2DC, #EDD6C8 58%, #F7EEE8);
+}
+
+.clinic-visual::before {
+  content: "";
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 28px;
+  height: 46px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.46);
+  filter: blur(2px);
+}
+
+.clinic-visual::after {
+  content: "";
+  position: absolute;
+  left: 38px;
+  bottom: 52px;
+  width: 92px;
+  height: 92px;
+  border: 1px solid rgba(255, 255, 255, 0.66);
+  border-radius: 48% 52% 45% 55%;
+  background: rgba(255, 255, 255, 0.24);
 }

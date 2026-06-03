@@ -1,0 +1,41 @@
+interface LogoMarkProps {
+  className?: string;
+}
+
+export default function LogoMark({ className = "h-5 w-5" }: LogoMarkProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 32 32"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M16 3.75c5.15 0 9.25 3.92 9.25 8.75 0 6.72-9.25 15.75-9.25 15.75S6.75 19.22 6.75 12.5C6.75 7.67 10.85 3.75 16 3.75Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12.1 13.45c1.3-2.8 6.5-2.8 7.8 0M11.85 17.2c1.75 2.25 6.55 2.25 8.3 0"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+      <path
+        d="M16 9.35v1.9M16 19.85v2.1"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+      <path
+        d="M24.7 5.25l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7.7-1.9ZM7.25 22.45l.55 1.45 1.45.55-1.45.55-.55 1.45-.55-1.45-1.45-.55 1.45-.55.55-1.45Z"
+        stroke="currentColor"
+        strokeWidth="1.45"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
