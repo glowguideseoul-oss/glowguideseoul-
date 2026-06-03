@@ -20,6 +20,7 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
   const [departure, setDeparture] = useState("");
   const [appointmentWindow, setAppointmentWindow] = useState("");
   const [treatment, setTreatment] = useState("");
+  const [noFlightYet, setNoFlightYet] = useState(false);
   const [language, setLanguage] = useState("English");
   const [budget, setBudget] = useState("");
   const [notes, setNotes] = useState("");
@@ -121,10 +122,25 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
               </div>
 
               <div className="bg-warm rounded-[20px] border border-border p-4 space-y-3">
-                <p className="text-xs font-semibold text-ink flex items-center gap-1.5">
-                  <Plane size={13} className="text-coral" />
-                  Korea visit schedule
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-ink flex items-center gap-1.5">
+                    <Plane size={13} className="text-coral" />
+                    Korea visit schedule
+                  </p>
+                  <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={noFlightYet}
+                      onChange={(e) => {
+                        setNoFlightYet(e.target.checked);
+                        if (e.target.checked) { setArrival(""); setDeparture(""); }
+                      }}
+                      className="w-3.5 h-3.5 accent-coral rounded"
+                    />
+                    <span className="text-xs text-muted">Don't have flights yet</span>
+                  </label>
+                </div>
+                {!noFlightYet && (
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
                     <label className="block text-xs text-muted mb-1.5 flex items-center gap-1">
@@ -149,6 +165,7 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
                     />
                   </div>
                 </div>
+                )}
                 <div>
                   <label className="block text-xs text-muted mb-1.5">Preferred appointment window</label>
                   <select
