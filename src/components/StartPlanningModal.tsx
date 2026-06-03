@@ -86,7 +86,8 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
   // clinic-inquiry state
   const [clinicNameFreeText, setClinicNameFreeText] = useState("");
   const [clinicLocation, setClinicLocation] = useState("");
-  const [listedClinics, setListedClinics] = useState<{ id: string; name: string }[]>([]);
+  const [listedClinics, setListedClinics] = useState<{ id: string; name: string; location: string }[]>([]);
+  const [chipArea, setChipArea] = useState<string | null>(null);
   const [inquiryConcern, setInquiryConcern] = useState("");
   const [inquiryArrival, setInquiryArrival] = useState("");
   const [inquiryDeparture, setInquiryDeparture] = useState("");
@@ -332,22 +333,43 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                 />
                 {listedClinics.length > 0 && (
                   <div className="pt-1">
-                    <p className="text-[11px] text-muted mb-1.5">Or pick from our featured clinics:</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {listedClinics.map((c) => (
+                    <p className="text-[11px] text-muted mb-2">Or pick from our listed clinics:</p>
+                    {/* Area filter tabs */}
+                    <div className="flex gap-1.5 flex-wrap mb-2">
+                      {["Gangnam", "Apgujeong", "Cheongdam", "Myeongdong", "Hongdae"].map((a) => (
                         <button
-                          key={c.id}
+                          key={a}
                           type="button"
-                          onClick={() => setClinicNameFreeText(c.name)}
-                          className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
-                            clinicNameFreeText === c.name
-                              ? "border-jade bg-jade text-white"
-                              : "border-border bg-white/70 text-muted hover:border-jade/40 hover:text-ink"
+                          onClick={() => setChipArea(chipArea === a ? null : a)}
+                          className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-all ${
+                            chipArea === a
+                              ? "border-coral bg-coral text-white"
+                              : "border-border bg-white/70 text-muted hover:border-coral/40"
                           }`}
                         >
-                          {c.name}
+                          {a}
                         </button>
                       ))}
+                    </div>
+                    {/* Filtered clinic chips — max 8 */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {listedClinics
+                        .filter((c) => !chipArea || c.location.toLowerCase().includes(chipArea.toLowerCase()))
+                        .slice(0, 8)
+                        .map((c) => (
+                          <button
+                            key={c.id}
+                            type="button"
+                            onClick={() => setClinicNameFreeText(c.name)}
+                            className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
+                              clinicNameFreeText === c.name
+                                ? "border-jade bg-jade text-white"
+                                : "border-border bg-white/70 text-muted hover:border-jade/40 hover:text-ink"
+                            }`}
+                          >
+                            {c.name}
+                          </button>
+                        ))}
                     </div>
                   </div>
                 )}
