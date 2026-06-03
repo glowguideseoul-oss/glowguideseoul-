@@ -1,8 +1,12 @@
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { requireAdmin } from "@/lib/admin-auth";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
+  await requireAdmin();
+
   const supabase = getSupabaseAdmin();
 
   const [{ data: consultations, error: e1 }, { data: inquiries, error: e2 }] = await Promise.all([
@@ -15,8 +19,18 @@ export default async function AdminPage() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Seoul Glow Admin</h1>
-        <p className="text-sm text-gray-500 mb-10">내부용 · Inbox only</p>
+        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Seoul Glow Admin</h1>
+            <p className="text-sm text-gray-500">내부용 · Inbox only</p>
+          </div>
+          <Link
+            href="/admin/clinics"
+            className="inline-flex items-center justify-center rounded-full bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-700"
+          >
+            클리닉 검수하기
+          </Link>
+        </div>
 
         {dbError && (
           <div className="mb-8 bg-red-50 border border-red-200 rounded-2xl p-5 text-sm text-red-700">
