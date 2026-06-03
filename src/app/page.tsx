@@ -29,7 +29,7 @@ import ClinicGuideFinder from "@/components/ClinicGuideFinder";
 import JourneyTabs from "@/components/JourneyTabs";
 import HeroButtons from "@/components/HeroButtons";
 import LogoMark from "@/components/LogoMark";
-import { clinics } from "@/lib/mock-data";
+import { getPublishedClinics } from "@/lib/clinics-db";
 import { CalendarDays, Languages, ClipboardList, ShieldCheck, MapPin, Plane, Pill, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -45,6 +45,8 @@ export default async function Home() {
       countryCounts[v.country_code] = (countryCounts[v.country_code] ?? 0) + 1;
     }
   }
+
+  const publishedClinics = await getPublishedClinics();
 
   return (
     <div className="min-h-screen bg-transparent font-sans">
@@ -174,7 +176,7 @@ export default async function Home() {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {clinics.map((clinic) => (
+            {publishedClinics.map((clinic) => (
               <ClinicCard key={clinic.id} clinic={clinic} />
             ))}
 
