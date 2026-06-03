@@ -26,7 +26,7 @@ const jsonLd = {
     "query-input": "required name=search_term_string",
   },
 };
-import ClinicCard from "@/components/ClinicCard";
+import ClinicCardGrid from "@/components/ClinicCardGrid";
 import ClinicGuideFinder from "@/components/ClinicGuideFinder";
 import JourneyTabs from "@/components/JourneyTabs";
 import HeroButtons from "@/components/HeroButtons";
@@ -181,28 +181,7 @@ export default async function Home() {
               <p className="text-muted text-sm">Sponsored clinics with foreigner-ready information.</p>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {publishedClinics.map((clinic) => (
-              <ClinicCard key={clinic.id} clinic={clinic} />
-            ))}
-
-            {/* Adding soon card */}
-            <div className="soft-card rounded-[28px] border-dashed p-6 flex flex-col items-center justify-center text-center min-h-[280px] gap-3">
-              <div className="w-10 h-10 rounded-full bg-border flex items-center justify-center text-muted text-lg">
-                +
-              </div>
-              <p className="font-medium text-ink text-sm">More clinics being added</p>
-              <p className="text-xs text-muted leading-relaxed max-w-[180px]">
-                We&apos;re onboarding foreigner-ready clinics in Seoul. Check back soon.
-              </p>
-              <Link
-                href="/for-clinics"
-                className="mt-2 text-xs text-coral font-medium hover:underline"
-              >
-                Is your clinic interested? →
-              </Link>
-            </div>
-          </div>
+          <ClinicCardGrid clinics={publishedClinics} />
         </div>
       </section>
 
