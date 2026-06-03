@@ -85,6 +85,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
 
   // clinic-inquiry state
   const [clinicNameFreeText, setClinicNameFreeText] = useState("");
+  const [clinicLocation, setClinicLocation] = useState("");
   const [listedClinics, setListedClinics] = useState<{ id: string; name: string }[]>([]);
   const [inquiryConcern, setInquiryConcern] = useState("");
   const [inquiryArrival, setInquiryArrival] = useState("");
@@ -135,6 +136,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
     await getSupabase().from("appointment_requests").insert({
       inquiry_type: "clinic-inquiry",
       clinic_name: resolvedClinicName || null,
+      area: clinicLocation || null,
       treatment_interest: concerns.find((c) => c.id === inquiryConcern)?.label ?? null,
       arrival_date: inquiryArrival || null,
       departure_date: inquiryDeparture || null,
@@ -166,7 +168,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                 {initialFlow === "find" ? <Search size={15} /> : <CalendarCheck size={15} />}
               </span>
               <span className="text-sm font-semibold text-ink">
-                {initialFlow === "find" ? "Get pre-visit advice" : "I have a clinic in mind"}
+                {initialFlow === "find" ? "클리닉 추천 받기" : "마음에 드는 클리닉이 있어요"}
               </span>
             </div>
             <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-warm border border-border text-muted hover:text-ink">
@@ -305,25 +307,32 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
           {step === "clinic-inquiry" && (
             <form onSubmit={handleInquirySubmit} className="space-y-4">
               <div>
-                <h2 className="font-serif text-2xl text-ink mb-1">Request a consultation</h2>
+                <h2 className="font-serif text-2xl text-ink mb-1">이미 마음에 드는 클리닉이 있군요</h2>
                 <p className="text-muted text-sm mb-5">
-                  Tell us which clinic you're considering and what you want to discuss. We'll pass your request along and follow up on your messenger.
+                  클리닉 이름과 위치를 알려주세요. 방문 전 준비사항과 질문 리스트를 정리해 드릴게요.
                 </p>
               </div>
 
-              {/* Clinic name */}
-              <div>
-                <label className="block text-xs font-semibold text-ink mb-1.5">Which clinic are you considering?</label>
+              {/* Clinic name + location */}
+              <div className="space-y-2">
+                <label className="block text-xs font-semibold text-ink">클리닉 정보</label>
                 <input
                   type="text"
                   value={clinicNameFreeText}
                   onChange={(e) => setClinicNameFreeText(e.target.value)}
-                  placeholder="Clinic name (e.g. JK Plastic Surgery, 압구정 피부과…)"
+                  placeholder="클리닉 이름 (예: JK성형외과, 압구정 피부과…)"
+                  className="w-full border border-border rounded-2xl px-4 py-2.5 text-sm text-ink placeholder:text-muted bg-warm focus:outline-none focus:ring-2 focus:ring-jade/30"
+                />
+                <input
+                  type="text"
+                  value={clinicLocation}
+                  onChange={(e) => setClinicLocation(e.target.value)}
+                  placeholder="위치 (예: 강남구 압구정동, 홍대 근처…)"
                   className="w-full border border-border rounded-2xl px-4 py-2.5 text-sm text-ink placeholder:text-muted bg-warm focus:outline-none focus:ring-2 focus:ring-jade/30"
                 />
                 {listedClinics.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-[11px] text-muted mb-1.5">Or pick from our featured clinics:</p>
+                  <div className="pt-1">
+                    <p className="text-[11px] text-muted mb-1.5">또는 등록된 클리닉에서 선택:</p>
                     <div className="flex flex-wrap gap-1.5">
                       {listedClinics.map((c) => (
                         <button
