@@ -3,6 +3,8 @@ import Navbar from "@/components/Navbar";
 import VisitorBanner from "@/components/VisitorBanner";
 import { getSupabase } from "@/lib/supabase";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Seoul Glow Guide — K-beauty Clinic Trips, Guided",
   description:

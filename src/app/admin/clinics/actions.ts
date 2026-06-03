@@ -56,4 +56,5 @@ export async function updateClinicStatus(formData: FormData) {
   }
 
   revalidatePath("/admin/clinics");
+  revalidatePath("/");
 }
