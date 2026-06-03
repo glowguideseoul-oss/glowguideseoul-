@@ -65,8 +65,12 @@ const concernCategoryMap: Record<string, string[]> = {
 export default function StartPlanningModal({ initialFlow, onClose }: Props) {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<Step>(initialFlow === "find" ? "find-form" : "clinic-inquiry");
+  const [requestCount, setRequestCount] = useState<number | null>(null);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+    fetch("/api/stats").then((r) => r.json()).then((d) => setRequestCount(d.count)).catch(() => {});
+  }, []);
 
   // find-form state
   const [concern, setConcern] = useState("");
@@ -205,9 +209,15 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
             <form onSubmit={handleFindSubmit} className="space-y-4">
               <div>
                 <h2 className="font-serif text-2xl text-ink mb-1">Not sure which treatment you need?</h2>
-                <p className="text-muted text-sm mb-5">
+                <p className="text-muted text-sm mb-3">
                   Tell us what's bothering you — we'll match you with the right clinics and help you know what to ask before you fly.
                 </p>
+                {requestCount !== null && requestCount > 0 && (
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-jade-light px-3 py-1.5 text-xs font-semibold text-jade-dark mb-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-jade-dark animate-pulse" />
+                    {requestCount.toLocaleString()}명이 이미 상담 신청했어요
+                  </div>
+                )}
               </div>
 
               {/* Concern */}
@@ -253,10 +263,13 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
 
               {/* Flight */}
               <div className="bg-warm rounded-[20px] border border-border p-4 space-y-3">
-                <p className="text-xs font-semibold text-ink flex items-center gap-1.5">
-                  <PlaneLanding size={12} className="text-jade-dark" />
-                  Korea visit schedule
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-ink flex items-center gap-1.5">
+                    <PlaneLanding size={12} className="text-jade-dark" />
+                    Korea visit schedule
+                  </p>
+                  <span className="text-[11px] text-coral-dark font-medium">⏰ 방문 2주 전 신청 권장</span>
+                </div>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
                     <label className="flex items-center gap-1 text-xs text-muted mb-1.5"><PlaneLanding size={11} /> Arrival</label>

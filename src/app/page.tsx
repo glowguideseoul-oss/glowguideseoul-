@@ -31,6 +31,8 @@ import ClinicGuideFinder from "@/components/ClinicGuideFinder";
 import JourneyTabs from "@/components/JourneyTabs";
 import HeroButtons from "@/components/HeroButtons";
 import LogoMark from "@/components/LogoMark";
+import ExitIntentModal from "@/components/ExitIntentModal";
+import ScrollCTABar from "@/components/ScrollCTABar";
 import { getPublishedClinics } from "@/lib/clinics-db";
 import { CalendarDays, Languages, ClipboardList, ShieldCheck, MapPin, Plane, Pill, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -56,6 +58,8 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <ExitIntentModal />
+      <ScrollCTABar />
       <VisitorBanner totalVisits={totalVisits} countryCounts={countryCounts} />
       <Navbar />
 
