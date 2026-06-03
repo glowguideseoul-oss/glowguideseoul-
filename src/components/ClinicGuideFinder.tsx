@@ -42,12 +42,12 @@ export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[
   const [activeConcern, setActiveConcern] = useState("all");
   const [activeArea, setActiveArea] = useState("all");
   const [activeSupport, setActiveSupport] = useState("all");
-  const [visibleCount, setVisibleCount] = useState(12);
+  const [visibleCount, setVisibleCount] = useState(5);
 
   const concern = concerns.find((item) => item.id === activeConcern) ?? concerns[0];
   const area = areas.find((item) => item.id === activeArea) ?? areas[0];
 
-  useEffect(() => { setVisibleCount(12); }, [activeConcern, activeArea, activeSupport]);
+  useEffect(() => { setVisibleCount(5); }, [activeConcern, activeArea, activeSupport]);
 
   const filteredClinics = useMemo(() => {
     return clinics.filter((clinic) => {
@@ -192,10 +192,10 @@ export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[
 
             {hasMore && (
               <button
-                onClick={() => setVisibleCount((n) => n + 12)}
+                onClick={() => setVisibleCount((n) => n + 5)}
                 className="mt-4 w-full rounded-full border border-border bg-white/70 py-2.5 text-sm font-semibold text-muted hover:border-jade/40 hover:text-ink transition-colors"
               >
-                Load 12 more · {allVisible.length - visibleCount} remaining
+                Load 5 more · {allVisible.length - visibleCount} remaining
               </button>
             )}
           </div>
