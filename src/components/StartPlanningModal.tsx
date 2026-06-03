@@ -12,7 +12,6 @@ import {
   CalendarCheck,
 } from "lucide-react";
 import Link from "next/link";
-import { clinics } from "@/lib/mock-data";
 import { getSupabase } from "@/lib/supabase";
 
 type Flow = "find" | "booked";
@@ -70,6 +69,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
   useEffect(() => {
     setMounted(true);
     fetch("/api/stats").then((r) => r.json()).then((d) => setRequestCount(d.count)).catch(() => {});
+    fetch("/api/clinics").then((r) => r.json()).then((d) => setListedClinics(d.clinics ?? [])).catch(() => {});
   }, []);
 
   // find-form state
@@ -84,8 +84,8 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
   const [notes, setNotes] = useState("");
 
   // clinic-inquiry state
-  const [selectedClinicId, setSelectedClinicId] = useState("");
   const [clinicNameFreeText, setClinicNameFreeText] = useState("");
+  const [listedClinics, setListedClinics] = useState<{ id: string; name: string }[]>([]);
   const [inquiryConcern, setInquiryConcern] = useState("");
   const [inquiryArrival, setInquiryArrival] = useState("");
   const [inquiryDeparture, setInquiryDeparture] = useState("");
@@ -98,44 +98,14 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
   const selectedArea = areas.find((item) => item.id === area);
   const selectedSupport = supportOptions.find((item) => item.id === support);
 
-  const isOtherClinic = selectedClinicId === "__other__";
-  const resolvedClinicName =
-    isOtherClinic
-      ? clinicNameFreeText
-      : clinics.find((c) => c.id === selectedClinicId)?.name ?? "";
+  const resolvedClinicName = clinicNameFreeText;
 
-  const matchedClinics = clinics
-    .map((clinic) => {
-      let score = 0;
-      const reasons: string[] = [];
-      const categoryTerms = concernCategoryMap[concern] ?? [];
-
-      if (categoryTerms.length === 0 || clinic.categories.some((category) => categoryTerms.some((term) => category.toLowerCase().includes(term.toLowerCase())))) {
-        score += concern ? 2 : 0;
-        if (selectedConcern) reasons.push(selectedConcern.label);
-      }
-
-      if (!selectedArea || selectedArea.match.length === 0 || selectedArea.match.some((term) => clinic.location.includes(term))) {
-        score += area ? 2 : 0;
-        if (selectedArea) reasons.push(selectedArea.label);
-      }
-
-      if (["EN", "JP", "ZH"].includes(support) && clinic.languages.includes(support)) {
-        score += 2;
-        if (selectedSupport) reasons.push(selectedSupport.label);
-      } else if (support === "aftercare" && clinic.aftercareNotes) {
-        score += 1;
-        reasons.push("Aftercare support");
-      } else if (support === "price" && clinic.priceRange) {
-        score += 1;
-        reasons.push("Price range listed");
-      }
-
-      if (clinic.sponsored) score += 1;
-      return { clinic, score, reasons: Array.from(new Set(reasons)) };
-    })
-    .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score)
+  const matchedClinics = listedClinics
+    .map((clinic) => ({
+      clinic,
+      score: 1,
+      reasons: [selectedConcern?.label, selectedArea?.label].filter(Boolean) as string[],
+    }))
     .slice(0, 3);
 
   async function handleFindSubmit(e: React.FormEvent) {
@@ -341,28 +311,36 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                 </p>
               </div>
 
-              {/* Clinic select */}
+              {/* Clinic name */}
               <div>
-                <label className="block text-xs font-semibold text-ink mb-1.5">Which clinic?</label>
-                <select
-                  value={selectedClinicId}
-                  onChange={(e) => setSelectedClinicId(e.target.value)}
-                  className="w-full border border-border rounded-2xl px-4 py-2.5 text-sm text-ink bg-warm focus:outline-none focus:ring-2 focus:ring-jade/30"
-                >
-                  <option value="">Select a clinic…</option>
-                  {clinics.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                  <option value="__other__">Other / not listed</option>
-                </select>
-                {isOtherClinic && (
-                  <input
-                    type="text"
-                    value={clinicNameFreeText}
-                    onChange={(e) => setClinicNameFreeText(e.target.value)}
-                    placeholder="Clinic name"
-                    className="mt-2 w-full border border-border rounded-2xl px-4 py-2.5 text-sm text-ink placeholder:text-muted bg-warm focus:outline-none focus:ring-2 focus:ring-jade/30"
-                  />
+                <label className="block text-xs font-semibold text-ink mb-1.5">Which clinic are you considering?</label>
+                <input
+                  type="text"
+                  value={clinicNameFreeText}
+                  onChange={(e) => setClinicNameFreeText(e.target.value)}
+                  placeholder="Clinic name (e.g. JK Plastic Surgery, 압구정 피부과…)"
+                  className="w-full border border-border rounded-2xl px-4 py-2.5 text-sm text-ink placeholder:text-muted bg-warm focus:outline-none focus:ring-2 focus:ring-jade/30"
+                />
+                {listedClinics.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-[11px] text-muted mb-1.5">Or pick from our featured clinics:</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {listedClinics.map((c) => (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => setClinicNameFreeText(c.name)}
+                          className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
+                            clinicNameFreeText === c.name
+                              ? "border-jade bg-jade text-white"
+                              : "border-border bg-white/70 text-muted hover:border-jade/40 hover:text-ink"
+                          }`}
+                        >
+                          {c.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
 
@@ -507,7 +485,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="text-sm font-semibold text-ink">{clinic.name}</p>
-                        <p className="text-xs text-muted mt-1">{clinic.location} · {clinic.priceRange}</p>
+                        <p className="text-xs text-muted mt-1">Seoul</p>
                       </div>
                       <ArrowRight size={14} className="text-muted shrink-0 mt-1" />
                     </div>
