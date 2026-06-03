@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import VisitorBanner from "@/components/VisitorBanner";
+import { getSupabase } from "@/lib/supabase";
 
 export const metadata: Metadata = {
   title: "Seoul Glow Guide — K-beauty Clinic Trips, Guided",
@@ -31,13 +33,26 @@ import { clinics } from "@/lib/mock-data";
 import { CalendarDays, Languages, ClipboardList, ShieldCheck, MapPin, Plane, Pill, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const { data: views } = await getSupabase()
+    .from("page_views")
+    .select("country_code");
+
+  const totalVisits = views?.length ?? 0;
+  const countryCounts: Record<string, number> = {};
+  for (const v of (views ?? [])) {
+    if (v.country_code) {
+      countryCounts[v.country_code] = (countryCounts[v.country_code] ?? 0) + 1;
+    }
+  }
+
   return (
     <div className="min-h-screen bg-transparent font-sans">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <VisitorBanner totalVisits={totalVisits} countryCounts={countryCounts} />
       <Navbar />
 
       {/* Hero */}
