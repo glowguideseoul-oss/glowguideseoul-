@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, MapPin, Search, SlidersHorizontal, Star } from "lucide-react";
 import type { ClinicForCard } from "@/lib/clinics-db";
 
 const concerns = [
@@ -42,9 +42,12 @@ export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[
   const [activeConcern, setActiveConcern] = useState("all");
   const [activeArea, setActiveArea] = useState("all");
   const [activeSupport, setActiveSupport] = useState("all");
+  const [visibleCount, setVisibleCount] = useState(12);
 
   const concern = concerns.find((item) => item.id === activeConcern) ?? concerns[0];
   const area = areas.find((item) => item.id === activeArea) ?? areas[0];
+
+  useEffect(() => { setVisibleCount(12); }, [activeConcern, activeArea, activeSupport]);
 
   const filteredClinics = useMemo(() => {
     return clinics.filter((clinic) => {
@@ -70,7 +73,9 @@ export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[
     });
   }, [activeConcern, activeArea, activeSupport, concern.terms, area.terms]);
 
-  const visibleClinics = filteredClinics.length > 0 ? filteredClinics : clinics.slice(0, 3);
+  const allVisible = filteredClinics.length > 0 ? filteredClinics : clinics.slice(0, 12);
+  const visibleClinics = allVisible.slice(0, visibleCount);
+  const hasMore = visibleCount < allVisible.length;
 
   return (
     <section id="clinic-finder" className="max-w-6xl mx-auto px-4 pb-20">
@@ -149,6 +154,15 @@ export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[
                           <MapPin size={13} />
                           {clinic.location}
                         </span>
+                        {clinic.rating != null && (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-500">
+                            <Star size={11} className="fill-amber-400 text-amber-400" />
+                            {clinic.rating.toFixed(1)}
+                            {clinic.reviewCount != null && (
+                              <span className="font-normal text-muted">({clinic.reviewCount.toLocaleString()})</span>
+                            )}
+                          </span>
+                        )}
                       </div>
                       <h3 className="text-base font-semibold text-ink">{clinic.name}</h3>
                       <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted">
@@ -175,6 +189,15 @@ export default function ClinicGuideFinder({ clinics }: { clinics: ClinicForCard[
                 </Link>
               ))}
             </div>
+
+            {hasMore && (
+              <button
+                onClick={() => setVisibleCount((n) => n + 12)}
+                className="mt-4 w-full rounded-full border border-border bg-white/70 py-2.5 text-sm font-semibold text-muted hover:border-jade/40 hover:text-ink transition-colors"
+              >
+                Load 12 more · {allVisible.length - visibleCount} remaining
+              </button>
+            )}
           </div>
         </div>
       </div>

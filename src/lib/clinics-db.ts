@@ -115,6 +115,7 @@ export async function getClinicById(id: string): Promise<ClinicForDetail | null>
     rating: (data.rating as number | null) ?? null,
     reviewCount: (data.user_ratings_total as number | null) ?? null,
     photoReferences: ((data.photo_references as string[] | null) ?? []),
+    firstReview: ((data.reviews as GoogleReview[] | null)?.[0]?.text) ?? null,
     languages: ((data.clinic_languages as { language_label: string }[]) ?? []).map((l) => l.language_label),
     categories: ((data.clinic_categories as { category: string }[]) ?? []).map((cat) => cat.category),
     foreignerSupport: (data.foreigner_support as string | null) ?? "Contact clinic for language support details.",
