@@ -14,6 +14,7 @@ interface Clinic {
   reviewCount: number | null;
   photoReferences: string[];
   source: string | null;
+  firstReview: string | null;
 }
 
 export default function ClinicCard({ clinic }: { clinic: Clinic }) {
@@ -82,7 +83,14 @@ export default function ClinicCard({ clinic }: { clinic: Clinic }) {
         </div>
 
         {/* Description */}
-        <p className="text-sm text-muted leading-relaxed mb-4 line-clamp-2">{clinic.description}</p>
+        <p className="text-sm text-muted leading-relaxed mb-3 line-clamp-2">{clinic.description}</p>
+
+        {/* First review quote */}
+        {clinic.firstReview && (
+          <p className="text-xs text-muted italic leading-relaxed mb-3 line-clamp-2 border-l-2 border-jade/30 pl-2.5">
+            "{clinic.firstReview}"
+          </p>
+        )}
 
         {/* Languages */}
         {clinic.languages.length > 0 && (

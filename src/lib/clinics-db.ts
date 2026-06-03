@@ -26,6 +26,7 @@ export type ClinicForCard = {
   reviewCount: number | null;
   photoReferences: string[];
   source: string | null;
+  firstReview: string | null;
 };
 
 export type ClinicForDetail = ClinicForCard & {
@@ -45,7 +46,7 @@ export async function getPublishedClinics(): Promise<ClinicForCard[]> {
     .select(`
       id, display_name, location_label, district, description,
       price_range_label, sponsored_status, source,
-      rating, user_ratings_total, photo_references,
+      rating, user_ratings_total, photo_references, reviews,
       clinic_languages(language_label),
       clinic_categories(category)
     `)
@@ -67,6 +68,7 @@ export async function getPublishedClinics(): Promise<ClinicForCard[]> {
     rating: (c.rating as number | null) ?? null,
     reviewCount: (c.user_ratings_total as number | null) ?? null,
     photoReferences: ((c.photo_references as string[] | null) ?? []),
+    firstReview: ((c.reviews as GoogleReview[] | null)?.[0]?.text) ?? null,
     languages: ((c.clinic_languages as { language_label: string }[]) ?? []).map((l) => l.language_label),
     categories: ((c.clinic_categories as { category: string }[]) ?? []).map((cat) => cat.category),
   }));
