@@ -60,11 +60,17 @@ export default async function AdminPage() {
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className={`text-xs font-semibold rounded-full px-2.5 py-1 ${
-                        row.inquiry_type === "clinic-inquiry"
+                        row.inquiry_type === "clinic-appointment"
+                          ? "bg-purple-100 text-purple-700"
+                          : row.inquiry_type === "clinic-inquiry"
                           ? "bg-coral-light text-coral-dark"
                           : "bg-jade-light text-jade-dark"
                       }`}>
-                        {row.inquiry_type === "clinic-inquiry" ? "클리닉 상담" : "클리닉 매칭"}
+                        {row.inquiry_type === "clinic-appointment"
+                          ? "예약 신청"
+                          : row.inquiry_type === "clinic-inquiry"
+                          ? "클리닉 상담"
+                          : "클리닉 매칭"}
                       </span>
                       {row.status === "new" && (
                         <span className="text-xs font-semibold rounded-full px-2.5 py-1 bg-yellow-100 text-yellow-700">
@@ -82,8 +88,9 @@ export default async function AdminPage() {
                     {row.treatment_interest && <Field label="관심 시술" value={row.treatment_interest} />}
                     {row.area && <Field label="지역" value={row.area} />}
                     {row.preferred_language && <Field label="언어" value={row.preferred_language} />}
+                    {row.what_matters_most && <Field label="중요 조건" value={row.what_matters_most} />}
                     {row.messenger_type && (
-                      <Field label="메신저" value={`${row.messenger_type}: ${row.messenger_id}`} />
+                      <Field label="메신저" value={`${row.messenger_type}${row.messenger_id ? `: ${row.messenger_id}` : ""}`} />
                     )}
                     {row.arrival_date && (
                       <Field label="방한 일정" value={`${row.arrival_date} → ${row.departure_date ?? "?"}`} />

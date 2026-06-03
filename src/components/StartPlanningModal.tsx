@@ -12,7 +12,6 @@ import {
   CalendarCheck,
 } from "lucide-react";
 import Link from "next/link";
-import { getSupabase } from "@/lib/supabase";
 
 type Flow = "find" | "booked";
 type Step = "find-form" | "clinic-inquiry" | "done";
@@ -104,35 +103,43 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
 
   async function handleFindSubmit(e: React.FormEvent) {
     e.preventDefault();
-    await getSupabase().from("appointment_requests").insert({
-      inquiry_type: "find",
-      treatment_interest: selectedConcern?.label ?? null,
-      area: selectedArea?.label ?? null,
-      what_matters_most: selectedSupport?.label ?? null,
-      budget_range: budget || null,
-      arrival_date: arrival || null,
-      departure_date: departure || null,
-      preferred_language: support,
-      messenger_type: messenger,
-      messenger_id: messengerId,
-      notes: notes || null,
+    await fetch("/api/inquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        inquiry_type: "find",
+        treatment_interest: selectedConcern?.label ?? null,
+        area: selectedArea?.label ?? null,
+        what_matters_most: selectedSupport?.label ?? null,
+        budget_range: budget || null,
+        arrival_date: arrival || null,
+        departure_date: departure || null,
+        preferred_language: support,
+        messenger_type: messenger,
+        messenger_id: messengerId,
+        notes: notes || null,
+      }),
     });
     setStep("done");
   }
 
   async function handleInquirySubmit(e: React.FormEvent) {
     e.preventDefault();
-    await getSupabase().from("appointment_requests").insert({
-      inquiry_type: "clinic-inquiry",
-      clinic_name: resolvedClinicName || null,
-      area: clinicLocation || null,
-      treatment_interest: concerns.find((c) => c.id === inquiryConcern)?.label ?? null,
-      arrival_date: inquiryArrival || null,
-      departure_date: inquiryDeparture || null,
-      preferred_language: inquiryLanguage,
-      messenger_type: inquiryMessenger,
-      messenger_id: inquiryMessengerId,
-      notes: inquiryNotes || null,
+    await fetch("/api/inquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        inquiry_type: "clinic-inquiry",
+        clinic_name: resolvedClinicName || null,
+        area: clinicLocation || null,
+        treatment_interest: concerns.find((c) => c.id === inquiryConcern)?.label ?? null,
+        arrival_date: inquiryArrival || null,
+        departure_date: inquiryDeparture || null,
+        preferred_language: inquiryLanguage,
+        messenger_type: inquiryMessenger,
+        messenger_id: inquiryMessengerId,
+        notes: inquiryNotes || null,
+      }),
     });
     setStep("done");
   }

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { X, Plane, PlaneLanding, PlaneTakeoff } from "lucide-react";
-import { getSupabase } from "@/lib/supabase";
 
 interface Props {
   clinicName: string;
@@ -28,21 +27,25 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    await getSupabase().from("appointment_requests").insert({
-      inquiry_type: "clinic-appointment",
-      clinic_name: clinicName,
-      treatment_interest: treatment || null,
-      preferred_language: language,
-      budget_range: budget || null,
-      arrival_date: arrival || null,
-      departure_date: departure || null,
-      notes: [
-        name && `Name: ${name}`,
-        country && `Country: ${country}`,
-        email && `Email: ${email}`,
-        appointmentWindow && `Preferred window: ${appointmentWindow}`,
-        notes,
-      ].filter(Boolean).join("\n") || null,
+    await fetch("/api/inquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        inquiry_type: "clinic-appointment",
+        clinic_name: clinicName,
+        treatment_interest: treatment || null,
+        preferred_language: language,
+        budget_range: budget || null,
+        arrival_date: noFlightYet ? null : (arrival || null),
+        departure_date: noFlightYet ? null : (departure || null),
+        notes: [
+          name && `Name: ${name}`,
+          country && `Country: ${country}`,
+          email && `Email: ${email}`,
+          noFlightYet ? "Flights: not booked yet" : (appointmentWindow && `Preferred window: ${appointmentWindow}`),
+          notes,
+        ].filter(Boolean).join("\n") || null,
+      }),
     });
     setLoading(false);
     setSubmitted(true);
