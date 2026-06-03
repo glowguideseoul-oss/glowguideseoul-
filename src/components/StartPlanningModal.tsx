@@ -168,7 +168,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                 {initialFlow === "find" ? <Search size={15} /> : <CalendarCheck size={15} />}
               </span>
               <span className="text-sm font-semibold text-ink">
-                {initialFlow === "find" ? "클리닉 추천 받기" : "마음에 드는 클리닉이 있어요"}
+                {initialFlow === "find" ? "Find my clinic" : "I have a clinic in mind"}
               </span>
             </div>
             <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-warm border border-border text-muted hover:text-ink">
@@ -187,7 +187,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                 {requestCount !== null && requestCount > 0 && (
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-jade-light px-3 py-1.5 text-xs font-semibold text-jade-dark mb-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-jade-dark animate-pulse" />
-                    {requestCount.toLocaleString()}명이 이미 상담 신청했어요
+                    {requestCount.toLocaleString()} travelers have already requested a consultation
                   </div>
                 )}
               </div>
@@ -240,7 +240,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                     <PlaneLanding size={12} className="text-jade-dark" />
                     Korea visit schedule
                   </p>
-                  <span className="text-[11px] text-coral-dark font-medium">⏰ 방문 2주 전 신청 권장</span>
+                  <span className="text-[11px] text-coral-dark font-medium">⏰ Book 2 weeks before arrival</span>
                 </div>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
@@ -307,32 +307,32 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
           {step === "clinic-inquiry" && (
             <form onSubmit={handleInquirySubmit} className="space-y-4">
               <div>
-                <h2 className="font-serif text-2xl text-ink mb-1">이미 마음에 드는 클리닉이 있군요</h2>
+                <h2 className="font-serif text-2xl text-ink mb-1">You already have a clinic in mind</h2>
                 <p className="text-muted text-sm mb-5">
-                  클리닉 이름과 위치를 알려주세요. 방문 전 준비사항과 질문 리스트를 정리해 드릴게요.
+                  Tell us the clinic name and location. We'll help you prepare the right questions before your visit.
                 </p>
               </div>
 
               {/* Clinic name + location */}
               <div className="space-y-2">
-                <label className="block text-xs font-semibold text-ink">클리닉 정보</label>
+                <label className="block text-xs font-semibold text-ink">Clinic details</label>
                 <input
                   type="text"
                   value={clinicNameFreeText}
                   onChange={(e) => setClinicNameFreeText(e.target.value)}
-                  placeholder="클리닉 이름 (예: JK성형외과, 압구정 피부과…)"
+                  placeholder="Clinic name (e.g. JK Plastic Surgery, CNP Dermatology…)"
                   className="w-full border border-border rounded-2xl px-4 py-2.5 text-sm text-ink placeholder:text-muted bg-warm focus:outline-none focus:ring-2 focus:ring-jade/30"
                 />
                 <input
                   type="text"
                   value={clinicLocation}
                   onChange={(e) => setClinicLocation(e.target.value)}
-                  placeholder="위치 (예: 강남구 압구정동, 홍대 근처…)"
+                  placeholder="Location (e.g. Gangnam, Apgujeong, Hongdae…)"
                   className="w-full border border-border rounded-2xl px-4 py-2.5 text-sm text-ink placeholder:text-muted bg-warm focus:outline-none focus:ring-2 focus:ring-jade/30"
                 />
                 {listedClinics.length > 0 && (
                   <div className="pt-1">
-                    <p className="text-[11px] text-muted mb-1.5">또는 등록된 클리닉에서 선택:</p>
+                    <p className="text-[11px] text-muted mb-1.5">Or pick from our featured clinics:</p>
                     <div className="flex flex-wrap gap-1.5">
                       {listedClinics.map((c) => (
                         <button

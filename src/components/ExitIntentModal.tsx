@@ -59,9 +59,9 @@ export default function ExitIntentModal() {
               <Sparkles size={20} className="text-jade-dark" />
             </div>
             <div>
-              <h3 className="font-serif text-2xl text-ink mb-1">서울 방문 계획 있으세요?</h3>
+              <h3 className="font-serif text-2xl text-ink mb-1">Planning a trip to Seoul?</h3>
               <p className="text-sm text-muted leading-relaxed">
-                메신저 ID만 남겨주세요. 클리닉 매칭부터 방문 준비까지 도와드릴게요.
+                Leave your messenger ID and we'll help you find the right clinic and prepare for your visit.
               </p>
             </div>
 
@@ -88,14 +88,14 @@ export default function ExitIntentModal() {
               type="submit"
               className="w-full bg-jade text-white rounded-full py-3 text-sm font-semibold hover:bg-jade-dark transition-colors"
             >
-              무료 상담 받기
+              Get free advice
             </button>
             <button
               type="button"
               onClick={() => setVisible(false)}
               className="w-full text-xs text-muted hover:text-ink transition-colors"
             >
-              괜찮아요, 다음에 볼게요
+              No thanks, maybe later
             </button>
           </form>
         ) : (
@@ -103,13 +103,13 @@ export default function ExitIntentModal() {
             <div className="w-12 h-12 bg-jade-light rounded-full flex items-center justify-center mx-auto mb-4">
               <Sparkles size={20} className="text-jade-dark" />
             </div>
-            <h3 className="font-serif text-xl text-ink mb-2">감사합니다!</h3>
-            <p className="text-sm text-muted mb-5">곧 연락드릴게요.</p>
+            <h3 className="font-serif text-xl text-ink mb-2">You're all set!</h3>
+            <p className="text-sm text-muted mb-5">We'll be in touch soon.</p>
             <button
               onClick={() => setVisible(false)}
               className="bg-jade text-white rounded-full px-6 py-2.5 text-sm font-semibold hover:bg-jade-dark transition-colors"
             >
-              닫기
+              Close
             </button>
           </div>
         )}
