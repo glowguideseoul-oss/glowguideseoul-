@@ -34,6 +34,15 @@
   --radius-sheet: 32px;
 }
 
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  animation: ticker 30s linear infinite;
+}
+
 * {
   box-sizing: border-box;
 }

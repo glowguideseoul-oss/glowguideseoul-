@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import SponsorTicker from "@/components/SponsorTicker";
 import VisitorBanner from "@/components/VisitorBanner";
 import { getSupabase } from "@/lib/supabase";
 
@@ -62,6 +63,7 @@ export default async function Home() {
       <ScrollCTABar />
       <VisitorBanner totalVisits={totalVisits} countryCounts={countryCounts} />
       <Navbar />
+      <SponsorTicker />
 
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-4 pt-14 pb-20">
