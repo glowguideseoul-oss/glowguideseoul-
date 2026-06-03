@@ -5,22 +5,26 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage() {
   const supabase = getSupabaseAdmin();
 
-  const [{ data: consultations }, { data: inquiries }] = await Promise.all([
-    supabase
-      .from("appointment_requests")
-      .select("*")
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("clinic_listing_inquiries")
-      .select("*")
-      .order("created_at", { ascending: false }),
+  const [{ data: consultations, error: e1 }, { data: inquiries, error: e2 }] = await Promise.all([
+    supabase.from("appointment_requests").select("*").order("created_at", { ascending: false }),
+    supabase.from("clinic_listing_inquiries").select("*").order("created_at", { ascending: false }),
   ]);
+
+  const dbError = e1 || e2;
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Seoul Glow Admin</h1>
         <p className="text-sm text-gray-500 mb-10">내부용 · Inbox only</p>
+
+        {dbError && (
+          <div className="mb-8 bg-red-50 border border-red-200 rounded-2xl p-5 text-sm text-red-700">
+            <p className="font-semibold mb-1">DB 연결 오류</p>
+            <p className="font-mono text-xs">{dbError.message}</p>
+            <p className="mt-2 text-xs text-red-500">Vercel에 SUPABASE_SERVICE_ROLE_KEY가 올바르게 설정됐는지, SQL 마이그레이션이 실행됐는지 확인해주세요.</p>
+          </div>
+        )}
 
         {/* Consultation Requests */}
         <section className="mb-12">
