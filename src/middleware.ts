@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  if (req.nextUrl.pathname.startsWith("/admin")) {
-    const auth = req.headers.get("authorization");
-    const expected = `Basic ${btoa(`admin:${process.env.ADMIN_PASSWORD}`)}`;
-    if (auth !== expected) {
-      return new NextResponse("Unauthorized", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Seoul Glow Admin"' },
-      });
+  const { pathname } = req.nextUrl;
+
+  if (pathname === "/admin/login") return NextResponse.next();
+
+  if (pathname.startsWith("/admin")) {
+    const cookie = req.cookies.get("admin_auth")?.value;
+    if (cookie !== process.env.ADMIN_PASSWORD) {
+      return NextResponse.redirect(new URL("/admin/login", req.url));
     }
   }
+
   return NextResponse.next();
 }
 

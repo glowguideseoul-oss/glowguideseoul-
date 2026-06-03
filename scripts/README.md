@@ -39,3 +39,41 @@ Fields:
 - Review clinics manually before exposing them in the app.
 - For sponsored clinic pages, ask clinics to confirm supported languages, price ranges, and aftercare support.
 
+## Import clinic candidates into Supabase
+
+Run `supabase/migrations/002_clinic_directory.sql` in Supabase first.
+
+Then add server-only credentials to `.env.local`:
+
+```bash
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+Import all Kakao candidates and auto-promote safe directory drafts:
+
+```bash
+set -a
+source .env.local
+set +a
+python3 scripts/import_clinics_to_supabase.py
+```
+
+Preview the automated review without writing to Supabase:
+
+```bash
+DRY_RUN=true python3 scripts/import_clinics_to_supabase.py
+```
+
+By default, promoted clinics stay as `profile_status = draft`.
+To publish auto-approved directory entries immediately:
+
+```bash
+PUBLISH_APPROVED_CLINICS=true python3 scripts/import_clinics_to_supabase.py
+```
+
+The automated review is only a first-pass data quality filter:
+
+- `approved_for_directory`: dermatology/plastic surgery candidate with Seoul address, phone, road address, and coordinates.
+- `needs_manual_review`: plausible clinic but missing key data or ambiguous category.
+- `reject`: obvious non-clinic result such as parking, restaurant, beauty salon, association, or building.
