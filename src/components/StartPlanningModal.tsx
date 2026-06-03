@@ -15,7 +15,7 @@ import Link from "next/link";
 import { getSupabase } from "@/lib/supabase";
 
 type Flow = "find" | "booked";
-type Step = "find-form" | "clinic-inquiry" | "matches" | "done";
+type Step = "find-form" | "clinic-inquiry" | "done";
 
 interface Props {
   initialFlow: Flow;
@@ -102,20 +102,8 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
 
   const resolvedClinicName = clinicNameFreeText;
 
-  const matchedClinics = listedClinics
-    .map((clinic) => ({
-      clinic,
-      score: 1,
-      reasons: [selectedConcern?.label, selectedArea?.label].filter(Boolean) as string[],
-    }))
-    .slice(0, 3);
-
   async function handleFindSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStep("matches");
-  }
-
-  async function handleMatchesSubmit() {
     await getSupabase().from("appointment_requests").insert({
       inquiry_type: "find",
       treatment_interest: selectedConcern?.label ?? null,
@@ -486,65 +474,6 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                 </button>
               </div>
             </form>
-          )}
-
-          {/* Flow: Matches */}
-          {step === "matches" && (
-            <div>
-              <button
-                type="button"
-                onClick={() => setStep("find-form")}
-                className="text-xs text-muted hover:text-ink mb-4 flex items-center gap-1"
-              >
-                ← Edit preferences
-              </button>
-              <h2 className="font-serif text-2xl text-ink mb-1">Clinic guides matching your preferences</h2>
-              <p className="text-muted text-sm mb-5">
-                {selectedConcern?.label ?? "Clinic options"}
-                {selectedArea ? ` · ${selectedArea.label}` : ""}
-                {selectedSupport ? ` · ${selectedSupport.label}` : ""}
-              </p>
-
-              <div className="space-y-3">
-                {matchedClinics.length ? matchedClinics.map(({ clinic, reasons }) => (
-                  <Link
-                    key={clinic.id}
-                    href={`/clinics/${clinic.id}`}
-                    onClick={onClose}
-                    className="block rounded-2xl border border-border bg-warm p-4 hover:border-jade/40 hover:bg-jade-light/25 transition-all"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-ink">{clinic.name}</p>
-                        <p className="text-xs text-muted mt-1">Seoul</p>
-                      </div>
-                      <ArrowRight size={14} className="text-muted shrink-0 mt-1" />
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {reasons.slice(0, 3).map((reason) => (
-                        <span key={reason} className="rounded-full bg-white border border-border px-2.5 py-1 text-[11px] font-medium text-muted">
-                          {reason}
-                        </span>
-                      ))}
-                    </div>
-                  </Link>
-                )) : (
-                  <div className="rounded-2xl border border-border bg-warm p-4 text-sm text-muted">
-                    No close match yet. Try choosing "Not sure yet" or a broader Seoul area.
-                  </div>
-                )}
-              </div>
-
-              <button
-                onClick={handleMatchesSubmit}
-                className="mt-5 w-full bg-jade text-white rounded-full py-3.5 font-semibold hover:bg-jade-dark transition-colors"
-              >
-                Request a pre-visit consultation
-              </button>
-              <p className="mt-3 text-xs text-muted text-center">
-                Matched by concern, area, language support, and price range.
-              </p>
-            </div>
           )}
 
           {/* Done */}
