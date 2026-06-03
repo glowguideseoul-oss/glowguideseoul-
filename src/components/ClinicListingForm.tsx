@@ -18,7 +18,6 @@ export default function ClinicListingForm() {
   const [email, setEmail] = useState("");
   const [location, setLocation] = useState("");
   const [selectedLangs, setSelectedLangs] = useState<string[]>([]);
-  const [budget, setBudget] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -38,7 +37,7 @@ export default function ClinicListingForm() {
       email,
       location_label: location || null,
       supported_languages: selectedLangs.join(", ") || null,
-      monthly_budget_range: budget || null,
+      monthly_budget_range: null,
       message: message || null,
     });
     setSubmitting(false);
@@ -103,22 +102,6 @@ export default function ClinicListingForm() {
             </button>
           ))}
         </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-ink mb-1.5">
-          월 마케팅 예산 <span className="text-muted font-normal">/ Monthly marketing budget</span>
-        </label>
-        <select
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-          className="w-full border border-border rounded-2xl px-5 py-3.5 text-sm text-ink bg-warm focus:outline-none focus:ring-2 focus:ring-coral/30"
-        >
-          <option value="">예산 범위 선택 / Select range</option>
-          <option>30만원 – 50만원 (₩300K – ₩500K)</option>
-          <option>50만원 – 100만원 (₩500K – ₩1M)</option>
-          <option>100만원 이상 (₩1M+)</option>
-        </select>
       </div>
 
       <div>
