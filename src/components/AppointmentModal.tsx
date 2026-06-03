@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Plane, PlaneLanding, PlaneTakeoff } from "lucide-react";
+import { X, Plane, PlaneLanding } from "lucide-react";
 
 interface Props {
   clinicName: string;
@@ -16,7 +16,6 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
   const [country, setCountry] = useState("");
   const [email, setEmail] = useState("");
   const [arrival, setArrival] = useState("");
-  const [departure, setDeparture] = useState("");
   const [appointmentWindow, setAppointmentWindow] = useState("");
   const [treatment, setTreatment] = useState("");
   const [noFlightYet, setNoFlightYet] = useState(false);
@@ -37,7 +36,6 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
         preferred_language: language,
         budget_range: budget || null,
         arrival_date: noFlightYet ? null : (arrival || null),
-        departure_date: noFlightYet ? null : (departure || null),
         notes: [
           name && `Name: ${name}`,
           country && `Country: ${country}`,
@@ -127,28 +125,22 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
               <div className="bg-warm rounded-[20px] border border-border p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold text-ink flex items-center gap-1.5">
-                    <Plane size={13} className="text-coral" />
+                    <PlaneLanding size={13} className="text-coral" />
                     Korea visit schedule
                   </p>
                   <label className="flex items-center gap-1.5 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={noFlightYet}
-                      onChange={(e) => {
-                        setNoFlightYet(e.target.checked);
-                        if (e.target.checked) { setArrival(""); setDeparture(""); }
-                      }}
+                      onChange={(e) => { setNoFlightYet(e.target.checked); if (e.target.checked) setArrival(""); }}
                       className="w-3.5 h-3.5 accent-coral rounded"
                     />
                     <span className="text-xs text-muted">Don't have flights yet</span>
                   </label>
                 </div>
                 {!noFlightYet && (
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs text-muted mb-1.5 flex items-center gap-1">
-                      <PlaneLanding size={11} /> Arrival
-                    </label>
+                    <label className="flex items-center gap-1 text-xs text-muted mb-1.5"><PlaneLanding size={11} /> Arrival to Seoul</label>
                     <input
                       type="date"
                       value={arrival}
@@ -156,18 +148,6 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
                       className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-coral/30 bg-white"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs text-muted mb-1.5 flex items-center gap-1">
-                      <PlaneTakeoff size={11} /> Departure
-                    </label>
-                    <input
-                      type="date"
-                      value={departure}
-                      onChange={(e) => setDeparture(e.target.value)}
-                      className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-coral/30 bg-white"
-                    />
-                  </div>
-                </div>
                 )}
                 <div>
                   <label className="block text-xs text-muted mb-1.5">Preferred appointment window</label>

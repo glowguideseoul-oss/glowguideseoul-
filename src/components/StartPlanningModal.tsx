@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Sparkles,
   PlaneLanding,
-  PlaneTakeoff,
   Search,
   CalendarCheck,
 } from "lucide-react";
@@ -77,7 +76,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
   const [support, setSupport] = useState("EN");
   const [budget, setBudget] = useState("");
   const [arrival, setArrival] = useState("");
-  const [departure, setDeparture] = useState("");
+  const [noFlightYet, setNoFlightYet] = useState(false);
   const [messenger, setMessenger] = useState("KakaoTalk");
   const [messengerId, setMessengerId] = useState("");
   const [notes, setNotes] = useState("");
@@ -89,7 +88,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
   const [chipArea, setChipArea] = useState<string | null>(null);
   const [inquiryConcern, setInquiryConcern] = useState("");
   const [inquiryArrival, setInquiryArrival] = useState("");
-  const [inquiryDeparture, setInquiryDeparture] = useState("");
+  const [noInquiryFlightYet, setNoInquiryFlightYet] = useState(false);
   const [inquiryLanguage, setInquiryLanguage] = useState("English");
   const [inquiryMessenger, setInquiryMessenger] = useState("KakaoTalk");
   const [inquiryMessengerId, setInquiryMessengerId] = useState("");
@@ -112,8 +111,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
         area: selectedArea?.label ?? null,
         what_matters_most: selectedSupport?.label ?? null,
         budget_range: budget || null,
-        arrival_date: arrival || null,
-        departure_date: departure || null,
+        arrival_date: noFlightYet ? null : (arrival || null),
         preferred_language: support,
         messenger_type: messenger,
         messenger_id: messengerId,
@@ -133,8 +131,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
         clinic_name: resolvedClinicName || null,
         area: clinicLocation || null,
         treatment_interest: concerns.find((c) => c.id === inquiryConcern)?.label ?? null,
-        arrival_date: inquiryArrival || null,
-        departure_date: inquiryDeparture || null,
+        arrival_date: noInquiryFlightYet ? null : (inquiryArrival || null),
         preferred_language: inquiryLanguage,
         messenger_type: inquiryMessenger,
         messenger_id: inquiryMessengerId,
@@ -236,18 +233,22 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                     <PlaneLanding size={12} className="text-jade-dark" />
                     Korea visit schedule
                   </p>
-                  <span className="text-[11px] text-coral-dark font-medium">⏰ Book 2 weeks before arrival</span>
+                  <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={noFlightYet}
+                      onChange={(e) => { setNoFlightYet(e.target.checked); if (e.target.checked) setArrival(""); }}
+                      className="w-3.5 h-3.5 accent-jade rounded"
+                    />
+                    <span className="text-xs text-muted">Don't have flights yet</span>
+                  </label>
                 </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {!noFlightYet && (
                   <div>
-                    <label className="flex items-center gap-1 text-xs text-muted mb-1.5"><PlaneLanding size={11} /> Arrival</label>
+                    <label className="flex items-center gap-1 text-xs text-muted mb-1.5"><PlaneLanding size={11} /> Arrival to Seoul</label>
                     <input type="date" value={arrival} onChange={(e) => setArrival(e.target.value)} className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink bg-white focus:outline-none focus:ring-2 focus:ring-jade/30" />
                   </div>
-                  <div>
-                    <label className="flex items-center gap-1 text-xs text-muted mb-1.5"><PlaneTakeoff size={11} /> Departure</label>
-                    <input type="date" value={departure} onChange={(e) => setDeparture(e.target.value)} className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink bg-white focus:outline-none focus:ring-2 focus:ring-jade/30" />
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Language + Budget */}
@@ -394,13 +395,24 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
 
               {/* Flight */}
               <div className="bg-warm rounded-[20px] border border-border p-4 space-y-3">
-                <p className="text-xs font-semibold text-ink flex items-center gap-1.5">
-                  <PlaneLanding size={12} className="text-jade-dark" />
-                  Korea visit schedule
-                </p>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-ink flex items-center gap-1.5">
+                    <PlaneLanding size={12} className="text-jade-dark" />
+                    Korea visit schedule
+                  </p>
+                  <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={noInquiryFlightYet}
+                      onChange={(e) => { setNoInquiryFlightYet(e.target.checked); if (e.target.checked) setInquiryArrival(""); }}
+                      className="w-3.5 h-3.5 accent-jade rounded"
+                    />
+                    <span className="text-xs text-muted">Don't have flights yet</span>
+                  </label>
+                </div>
+                {!noInquiryFlightYet && (
                   <div>
-                    <label className="flex items-center gap-1 text-xs text-muted mb-1.5"><PlaneLanding size={11} /> Arrival</label>
+                    <label className="flex items-center gap-1 text-xs text-muted mb-1.5"><PlaneLanding size={11} /> Arrival to Seoul</label>
                     <input
                       type="date"
                       value={inquiryArrival}
@@ -408,16 +420,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                       className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink bg-white focus:outline-none focus:ring-2 focus:ring-jade/30"
                     />
                   </div>
-                  <div>
-                    <label className="flex items-center gap-1 text-xs text-muted mb-1.5"><PlaneTakeoff size={11} /> Departure</label>
-                    <input
-                      type="date"
-                      value={inquiryDeparture}
-                      onChange={(e) => setInquiryDeparture(e.target.value)}
-                      className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink bg-white focus:outline-none focus:ring-2 focus:ring-jade/30"
-                    />
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Language + Messenger */}
