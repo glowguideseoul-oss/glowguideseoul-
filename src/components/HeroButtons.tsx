@@ -22,7 +22,7 @@ export default function HeroButtons() {
           onClick={() => setModal("booked")}
           className="inline-flex w-full items-center justify-center bg-white/70 text-ink border border-border rounded-full px-7 py-3.5 font-semibold hover:border-jade/30 transition-colors sm:w-auto"
         >
-          I have a clinic in mind
+          Check a clinic I found
         </button>
       </div>
 
@@ -30,7 +30,7 @@ export default function HeroButtons() {
         Not sure which clinic is right for you?{" "}
         <span className="text-jade-dark font-medium">Get matched before you fly.</span>
         {"  "}Already have one in mind?{" "}
-        <span className="text-ink font-medium">Prepare your visit and questions.</span>
+        <span className="text-ink font-medium">Check it before you book.</span>
       </p>
 
       <div className="mt-6">

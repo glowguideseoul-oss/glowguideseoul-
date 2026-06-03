@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { X, Plane, PlaneLanding, PlaneTakeoff } from "lucide-react";
+import { getSupabase } from "@/lib/supabase";
 
 interface Props {
   clinicName: string;
@@ -10,26 +11,52 @@ interface Props {
 
 export default function AppointmentModal({ clinicName, onClose }: Props) {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  const [name, setName] = useState("");
+  const [country, setCountry] = useState("");
+  const [email, setEmail] = useState("");
+  const [arrival, setArrival] = useState("");
+  const [departure, setDeparture] = useState("");
+  const [appointmentWindow, setAppointmentWindow] = useState("");
+  const [treatment, setTreatment] = useState("");
+  const [language, setLanguage] = useState("English");
+  const [budget, setBudget] = useState("");
+  const [notes, setNotes] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(true);
+    await getSupabase().from("appointment_requests").insert({
+      inquiry_type: "clinic-appointment",
+      clinic_name: clinicName,
+      treatment_interest: treatment || null,
+      preferred_language: language,
+      budget_range: budget || null,
+      arrival_date: arrival || null,
+      departure_date: departure || null,
+      notes: [
+        name && `Name: ${name}`,
+        country && `Country: ${country}`,
+        email && `Email: ${email}`,
+        appointmentWindow && `Preferred window: ${appointmentWindow}`,
+        notes,
+      ].filter(Boolean).join("\n") || null,
+    });
+    setLoading(false);
     setSubmitted(true);
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Sheet */}
       <div className="relative w-full sm:max-w-lg bg-white rounded-t-[32px] sm:rounded-[28px] max-h-[92vh] overflow-y-auto shadow-xl">
-        {/* Handle */}
         <div className="flex justify-center pt-3 pb-1 sm:hidden">
           <div className="w-10 h-1 bg-border rounded-full" />
         </div>
 
         <div className="px-6 pb-8 pt-4">
-          {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div>
               <p className="text-xs text-muted mb-1">Appointment request</p>
@@ -47,7 +74,7 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
               </div>
               <h3 className="font-semibold text-ink text-lg mb-2">Request sent!</h3>
               <p className="text-muted text-sm leading-relaxed">
-                The clinic will review your inquiry and get back to you within 2 business days.
+                We'll forward your inquiry to {clinicName} and follow up within 2 business days.
               </p>
               <button
                 onClick={onClose}
@@ -58,22 +85,25 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Personal */}
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="block text-xs font-medium text-ink mb-1.5">Name</label>
                   <input
                     required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Your name"
-                    className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral bg-warm"
+                    className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 bg-warm"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-ink mb-1.5">Country</label>
                   <input
                     required
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
                     placeholder="Japan"
-                    className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral bg-warm"
+                    className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 bg-warm"
                   />
                 </div>
               </div>
@@ -83,46 +113,49 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
                 <input
                   required
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@email.com"
-                  className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral bg-warm"
+                  className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 bg-warm"
                 />
               </div>
 
-              {/* Flight schedule */}
               <div className="bg-warm rounded-[20px] border border-border p-4 space-y-3">
                 <p className="text-xs font-semibold text-ink flex items-center gap-1.5">
                   <Plane size={13} className="text-coral" />
                   Korea visit schedule
                 </p>
-
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
                     <label className="block text-xs text-muted mb-1.5 flex items-center gap-1">
-                      <PlaneLanding size={11} />
-                      Arrival (flight in)
+                      <PlaneLanding size={11} /> Arrival
                     </label>
                     <input
-                      type="datetime-local"
-                      required
-                      className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral bg-white"
+                      type="date"
+                      value={arrival}
+                      onChange={(e) => setArrival(e.target.value)}
+                      className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-coral/30 bg-white"
                     />
                   </div>
                   <div>
                     <label className="block text-xs text-muted mb-1.5 flex items-center gap-1">
-                      <PlaneTakeoff size={11} />
-                      Departure (flight out)
+                      <PlaneTakeoff size={11} /> Departure
                     </label>
                     <input
-                      type="datetime-local"
-                      required
-                      className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral bg-white"
+                      type="date"
+                      value={departure}
+                      onChange={(e) => setDeparture(e.target.value)}
+                      className="w-full border border-border rounded-2xl px-3 py-2.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-coral/30 bg-white"
                     />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-xs text-muted mb-1.5">Preferred appointment window</label>
-                  <select className="w-full border border-border rounded-2xl px-4 py-2.5 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-coral/30">
+                  <select
+                    value={appointmentWindow}
+                    onChange={(e) => setAppointmentWindow(e.target.value)}
+                    className="w-full border border-border rounded-2xl px-4 py-2.5 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-coral/30"
+                  >
                     <option value="">Select preference</option>
                     <option>First day of arrival</option>
                     <option>Middle of stay</option>
@@ -132,10 +165,14 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
                 </div>
               </div>
 
-              {/* Treatment */}
               <div>
                 <label className="block text-xs font-medium text-ink mb-1.5">Treatment interest</label>
-                <select required className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink bg-warm focus:outline-none focus:ring-2 focus:ring-coral/30">
+                <select
+                  required
+                  value={treatment}
+                  onChange={(e) => setTreatment(e.target.value)}
+                  className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink bg-warm focus:outline-none focus:ring-2 focus:ring-coral/30"
+                >
                   <option value="">Select treatment</option>
                   <option>Skin Booster / Hydration</option>
                   <option>Laser / Pigmentation</option>
@@ -147,11 +184,14 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
                 </select>
               </div>
 
-              {/* Language + Budget */}
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="block text-xs font-medium text-ink mb-1.5">Preferred language</label>
-                  <select className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink bg-warm focus:outline-none focus:ring-2 focus:ring-coral/30">
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink bg-warm focus:outline-none focus:ring-2 focus:ring-coral/30"
+                  >
                     <option>English</option>
                     <option>Japanese</option>
                     <option>Chinese</option>
@@ -161,7 +201,12 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-ink mb-1.5">Budget range</label>
-                  <select className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink bg-warm focus:outline-none focus:ring-2 focus:ring-coral/30">
+                  <select
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink bg-warm focus:outline-none focus:ring-2 focus:ring-coral/30"
+                  >
+                    <option value="">Select…</option>
                     <option>Under $200</option>
                     <option>$200 – $500</option>
                     <option>$500 – $1,000</option>
@@ -170,23 +215,24 @@ export default function AppointmentModal({ clinicName, onClose }: Props) {
                 </div>
               </div>
 
-              {/* Notes */}
               <div>
                 <label className="block text-xs font-medium text-ink mb-1.5">Notes (optional)</label>
                 <textarea
                   rows={3}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
                   placeholder="Allergies, medications, skin concerns, or anything the clinic should know..."
-                  className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral bg-warm resize-none"
+                  className="w-full border border-border rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-coral/30 bg-warm resize-none"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-coral text-white rounded-full py-3.5 font-semibold hover:bg-coral-dark transition-colors"
+                disabled={loading}
+                className="w-full bg-coral text-white rounded-full py-3.5 font-semibold hover:bg-coral-dark transition-colors disabled:opacity-60"
               >
-                Send appointment request
+                {loading ? "Sending…" : "Send appointment request"}
               </button>
-
               <p className="text-xs text-muted text-center">
                 This is a consultation inquiry, not a confirmed booking.
               </p>

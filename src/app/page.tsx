@@ -6,9 +6,9 @@ import { getSupabase } from "@/lib/supabase";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Seoul Glow Guide — K-beauty Clinic Trips, Guided",
+  title: "Seoul Glow Guide — Seoul Clinic Concierge",
   description:
-    "Plan your Seoul clinic visit with confidence. Find foreigner-ready clinics, get pre-visit advice, and prepare for every step — from consultation to aftercare.",
+    "Find the right Seoul clinic before you fly. Compare foreigner-ready clinics, prepare the right questions, and plan your visit with confidence.",
   openGraph: {
     url: "https://glowguideseoul.com",
   },
@@ -19,7 +19,7 @@ const jsonLd = {
   "@type": "WebSite",
   name: "Seoul Glow Guide",
   url: "https://glowguideseoul.com",
-  description: "K-beauty clinic trip guide for medical travelers visiting Seoul.",
+  description: "Seoul Clinic Concierge for medical travelers.",
   potentialAction: {
     "@type": "SearchAction",
     target: "https://glowguideseoul.com/#clinics",
@@ -70,16 +70,16 @@ export default async function Home() {
             <div className="py-8 md:py-12">
               <div className="inline-flex items-center gap-2 bg-jade-light text-jade-dark rounded-full px-4 py-1.5 text-sm font-semibold mb-8">
                 <LogoMark className="h-4 w-4" />
-                K-beauty clinic trip guide for medical travelers
+                Seoul Clinic Concierge for medical travelers
               </div>
 
               <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl text-ink leading-[0.98] mb-6 max-w-3xl">
-                Your Seoul glow trip, guided from clinic visit to aftercare
+                Find the right Seoul clinic before you fly
               </h1>
 
               <p className="text-soft text-lg max-w-xl mb-10 leading-relaxed">
-                Prepare your appointment, navigate your clinic visit, and keep aftercare clear
-                from hotel to follow-up.
+                Compare foreigner-ready clinics, prepare the right questions, and plan your visit
+                with confidence.
               </p>
 
               <HeroButtons />
@@ -97,7 +97,7 @@ export default async function Home() {
                 <div className="my-5 rounded-[26px] border border-border bg-[linear-gradient(90deg,rgba(234,216,198,.55)_1px,transparent_1px),linear-gradient(rgba(234,216,198,.55)_1px,transparent_1px)] bg-[length:34px_34px] p-5">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-coral-light px-3 py-1 text-xs font-semibold text-coral-dark">
                     <MapPin size={13} />
-                    Clinic Trip
+                    Clinic Concierge
                   </span>
                   <div className="my-6 flex items-center gap-3">
                     <span className="h-0.5 flex-1 rounded-full bg-jade/30" />

@@ -157,7 +157,7 @@ export default function StartPlanningModal({ initialFlow, onClose }: Props) {
                 {initialFlow === "find" ? <Search size={15} /> : <CalendarCheck size={15} />}
               </span>
               <span className="text-sm font-semibold text-ink">
-                {initialFlow === "find" ? "Find my clinic" : "I have a clinic in mind"}
+                {initialFlow === "find" ? "Find my clinic" : "Check a clinic I found"}
               </span>
             </div>
             <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-warm border border-border text-muted hover:text-ink">
