@@ -1,4 +1,4 @@
-import { getSupabase } from "./supabase";
+import { getSupabaseAdmin } from "./supabase-server";
 
 export type ClinicForCard = {
   id: string;
@@ -18,7 +18,7 @@ export type ClinicForDetail = ClinicForCard & {
 };
 
 export async function getPublishedClinics(): Promise<ClinicForCard[]> {
-  const { data, error } = await getSupabase()
+  const { data, error } = await getSupabaseAdmin()
     .from("clinics")
     .select(`
       id, display_name, location_label, district, description,
@@ -26,6 +26,8 @@ export async function getPublishedClinics(): Promise<ClinicForCard[]> {
       clinic_languages(language_label),
       clinic_categories(category)
     `)
+    .eq("profile_status", "published")
+    .in("review_status", ["directory_approved", "clinic_confirmed"])
     .order("sponsored_status", { ascending: false })
     .order("display_name");
 
@@ -44,7 +46,7 @@ export async function getPublishedClinics(): Promise<ClinicForCard[]> {
 }
 
 export async function getClinicById(id: string): Promise<ClinicForDetail | null> {
-  const { data, error } = await getSupabase()
+  const { data, error } = await getSupabaseAdmin()
     .from("clinics")
     .select(`
       id, display_name, location_label, district, description,
@@ -55,6 +57,7 @@ export async function getClinicById(id: string): Promise<ClinicForDetail | null>
       clinic_checklist_items(stage, label, sort_order)
     `)
     .eq("id", Number(id))
+    .eq("profile_status", "published")
     .single();
 
   if (error || !data) return null;
